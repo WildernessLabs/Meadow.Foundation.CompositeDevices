@@ -29,23 +29,9 @@ namespace Meadow.Foundation.Relays
         /// </summary>
         /// <param name="i2cBus">The I2C bus the peripheral is connected to</param>
         /// <param name="address">The bus address of the peripheral</param>
-        /// <param name="interruptPin">The interrupt pin</param>
-        public ElectromagneticRelayModule(II2cBus i2cBus, byte address, IPin interruptPin)
+        public ElectromagneticRelayModule(II2cBus i2cBus, byte address)
         {
-            ioExpander = new Pcf8574(i2cBus, address, interruptPin);
-
-            InitializePorts();
-        }
-
-        /// <summary>
-        /// Creates a new ElectroMagneticRelayModule instance
-        /// </summary>
-        /// <param name="i2cBus">The I2C bus the peripheral is connected to</param>
-        /// <param name="address">The I2C bus address of the peripheral</param>
-        /// <param name="interruptPort">The interrupt port</param>
-        public ElectromagneticRelayModule(II2cBus i2cBus, byte address, IDigitalInterruptPort? interruptPort = default)
-        {
-            ioExpander = new Pcf8574(i2cBus, address, interruptPort);
+            ioExpander = new Pcf8574(i2cBus, address);
 
             InitializePorts();
         }

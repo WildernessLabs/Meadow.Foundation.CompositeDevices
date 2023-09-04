@@ -27,7 +27,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ElectromagneticRelayModule"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sample", "Sample", "{BC092D17-F8D5-4BEA-ABE4-E98B44A04DA6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Relays.ElectromagneticRelayModule", "Relays.ElectromagneticRelayModule\Relays.ElectromagneticRelayModule.csproj", "{1744A0BF-F433-4F2E-B5CB-6B096ED0D5A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Relays.ElectromagneticRelayModule", "Relays.ElectromagneticRelayModule\Driver\Relays.ElectromagneticRelayModule.csproj", "{29CF3228-7907-4FD6-88E3-DB91023B6281}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElectronmagneticRelayModule_Sample", "Relays.ElectromagneticRelayModule\Samples\ElectronmagneticRelayModule_Sample\ElectronmagneticRelayModule_Sample.csproj", "{815E8496-8359-4D35-83EB-A1120D3AA404}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -79,12 +81,18 @@ Global
 		{7C81A55C-4760-41BE-BA32-9777BCE7B11C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C81A55C-4760-41BE-BA32-9777BCE7B11C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7C81A55C-4760-41BE-BA32-9777BCE7B11C}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{1744A0BF-F433-4F2E-B5CB-6B096ED0D5A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1744A0BF-F433-4F2E-B5CB-6B096ED0D5A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1744A0BF-F433-4F2E-B5CB-6B096ED0D5A0}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{1744A0BF-F433-4F2E-B5CB-6B096ED0D5A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1744A0BF-F433-4F2E-B5CB-6B096ED0D5A0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1744A0BF-F433-4F2E-B5CB-6B096ED0D5A0}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{29CF3228-7907-4FD6-88E3-DB91023B6281}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29CF3228-7907-4FD6-88E3-DB91023B6281}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29CF3228-7907-4FD6-88E3-DB91023B6281}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{29CF3228-7907-4FD6-88E3-DB91023B6281}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29CF3228-7907-4FD6-88E3-DB91023B6281}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29CF3228-7907-4FD6-88E3-DB91023B6281}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{815E8496-8359-4D35-83EB-A1120D3AA404}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{815E8496-8359-4D35-83EB-A1120D3AA404}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{815E8496-8359-4D35-83EB-A1120D3AA404}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{815E8496-8359-4D35-83EB-A1120D3AA404}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{815E8496-8359-4D35-83EB-A1120D3AA404}.Release|Any CPU.Build.0 = Release|Any CPU
+		{815E8496-8359-4D35-83EB-A1120D3AA404}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -100,7 +108,8 @@ Global
 		{7C81A55C-4760-41BE-BA32-9777BCE7B11C} = {20E3A0B4-6103-4EAD-BD90-90C673E07DCC}
 		{AE474B14-7388-421B-BB92-8700CD54BC57} = {1FA3EE45-BDD7-4B83-9AD9-52B1099185B6}
 		{BC092D17-F8D5-4BEA-ABE4-E98B44A04DA6} = {AE474B14-7388-421B-BB92-8700CD54BC57}
-		{1744A0BF-F433-4F2E-B5CB-6B096ED0D5A0} = {AE474B14-7388-421B-BB92-8700CD54BC57}
+		{29CF3228-7907-4FD6-88E3-DB91023B6281} = {AE474B14-7388-421B-BB92-8700CD54BC57}
+		{815E8496-8359-4D35-83EB-A1120D3AA404} = {BC092D17-F8D5-4BEA-ABE4-E98B44A04DA6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BF2FC8CE-57C6-468C-B82D-D8204E6D9360}
