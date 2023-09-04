@@ -49,9 +49,9 @@ namespace Meadow.Foundation.Relays
         /// </summary>
         /// <param name="relay">The relay (1-4)</param>
         /// <returns>True if closed/connected, fase if open/disconnected</returns>
-        public bool GetRelayState(Relays relay)
+        public bool GetRelayState(RelayIndex relay)
         {
-            return ports[(int)relay].State;
+            return !ports[(int)relay].State;
         }
 
         /// <summary>
@@ -59,9 +59,31 @@ namespace Meadow.Foundation.Relays
         /// </summary>
         /// <param name="relay">The relay (1-4)</param>
         /// <param name="state">True for closed/connected, fase if open/disconnected</param>
-        public void SetRelayState(Relays relay, bool state) 
+        public void SetRelayState(RelayIndex relay, bool state) 
         {
-            ports[(int)relay].State = state;
+            ports[(int)relay].State = !state;
+        }
+
+        /// <summary>
+        /// Set all relays on
+        /// </summary>
+        public void SetAllOn()
+        {
+            foreach(var port in ports)
+            {
+                port.State = false;
+            }
+        }
+
+        /// <summary>
+        /// Set all relays off
+        /// </summary>
+        public void SetAllOff()
+        {
+            foreach (var port in ports)
+            {
+                port.State = true;
+            }
         }
 
         /// <summary>

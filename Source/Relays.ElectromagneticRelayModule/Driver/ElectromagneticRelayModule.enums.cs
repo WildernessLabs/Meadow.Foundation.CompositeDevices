@@ -5,7 +5,7 @@
         /// <summary>
         /// Represents the module relays
         /// </summary>
-        public enum Relays
+        public enum RelayIndex
         {
             /// <summary>
             /// Relay #1
