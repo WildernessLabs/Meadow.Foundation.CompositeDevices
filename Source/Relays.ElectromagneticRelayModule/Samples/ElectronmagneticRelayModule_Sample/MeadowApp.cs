@@ -18,7 +18,7 @@ namespace Relays.ElectronmagneticRelayModule_Sample
         {
             Console.WriteLine("Initialize...");
 
-            module = new ElectromagneticRelayModule(Device.CreateI2cBus(), 0x20);
+            module = new ElectromagneticRelayModule(Device.CreateI2cBus(), ElectromagneticRelayModule.GetAddressFromPins(false, false, false));
 
             return Task.CompletedTask;
         }
@@ -37,7 +37,7 @@ namespace Relays.ElectronmagneticRelayModule_Sample
 
                 Thread.Sleep(1000);
 
-                for(int j = 0; j < 4; j++)
+                for (int j = 0; j < 4; j++)
                 {
                     Console.Write($"{(RelayIndex)j} on");
                     module.SetRelayState((RelayIndex)j, true);

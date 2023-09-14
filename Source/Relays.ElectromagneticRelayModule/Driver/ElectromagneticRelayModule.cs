@@ -32,6 +32,8 @@ namespace Meadow.Foundation.Relays
         public ElectromagneticRelayModule(II2cBus i2cBus, byte address)
         {
             ioExpander = new Pcf8574(i2cBus, address);
+            //Relay logic is inverted, this sets all relays to off
+            ioExpander.AllOn();
 
             InitializePorts();
         }
@@ -59,7 +61,7 @@ namespace Meadow.Foundation.Relays
         /// </summary>
         /// <param name="relay">The relay (1-4)</param>
         /// <param name="state">True for closed/connected, fase if open/disconnected</param>
-        public void SetRelayState(RelayIndex relay, bool state) 
+        public void SetRelayState(RelayIndex relay, bool state)
         {
             ports[(int)relay].State = !state;
         }
@@ -69,7 +71,7 @@ namespace Meadow.Foundation.Relays
         /// </summary>
         public void SetAllOn()
         {
-            foreach(var port in ports)
+            foreach (var port in ports)
             {
                 port.State = false;
             }
@@ -96,9 +98,9 @@ namespace Meadow.Foundation.Relays
             {
                 if (disposing)
                 {
-                    foreach(var port in ports)
+                    foreach (var port in ports)
                     {
-                        if(port != null)
+                        if (port != null)
                         {
                             port.Dispose();
                         }
