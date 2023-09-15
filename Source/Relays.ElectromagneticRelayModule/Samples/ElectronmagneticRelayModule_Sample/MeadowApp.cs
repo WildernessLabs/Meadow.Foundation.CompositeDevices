@@ -8,7 +8,7 @@ using static Meadow.Foundation.Relays.ElectromagneticRelayModule;
 
 namespace Relays.ElectronmagneticRelayModule_Sample
 {
-    public class MeadowApp : App<F7CoreComputeV2>
+    public class MeadowApp : App<F7FeatherV2>
     {
         //<!=SNIP=>
 

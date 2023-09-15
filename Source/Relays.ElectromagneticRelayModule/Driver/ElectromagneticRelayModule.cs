@@ -32,6 +32,7 @@ namespace Meadow.Foundation.Relays
         public ElectromagneticRelayModule(II2cBus i2cBus, byte address)
         {
             ioExpander = new Pcf8574(i2cBus, address);
+
             //Relay logic is inverted, this sets all relays to off
             ioExpander.AllOn();
 
@@ -40,10 +41,10 @@ namespace Meadow.Foundation.Relays
 
         void InitializePorts()
         {
-            ports[0] = ioExpander.Pins.P4.CreateDigitalOutputPort();
-            ports[1] = ioExpander.Pins.P5.CreateDigitalOutputPort();
-            ports[2] = ioExpander.Pins.P6.CreateDigitalOutputPort();
-            ports[3] = ioExpander.Pins.P7.CreateDigitalOutputPort();
+            ports[0] = ioExpander.Pins.P4.CreateDigitalOutputPort(true);
+            ports[1] = ioExpander.Pins.P5.CreateDigitalOutputPort(true);
+            ports[2] = ioExpander.Pins.P6.CreateDigitalOutputPort(true);
+            ports[3] = ioExpander.Pins.P7.CreateDigitalOutputPort(true);
         }
 
         /// <summary>
@@ -100,10 +101,7 @@ namespace Meadow.Foundation.Relays
                 {
                     foreach (var port in ports)
                     {
-                        if (port != null)
-                        {
-                            port.Dispose();
-                        }
+                        port?.Dispose();
                     }
                 }
 
