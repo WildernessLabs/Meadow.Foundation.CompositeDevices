@@ -58,28 +58,6 @@ namespace Meadow.Foundation.Relays
             Relays[3] = new Relay(ports[3], RelayType.NormallyClosed);
         }
 
-        /*
-        /// <summary>
-        /// Get the relay state
-        /// </summary>
-        /// <param name="relay">The relay (1-4)</param>
-        /// <returns>True if closed/connected, fase if open/disconnected</returns>
-        protected bool GetRelayState(RelayIndex relay)
-        {
-            return !ports[(int)relay].State;
-        }
-
-        /// <summary>
-        /// Set the relay state
-        /// </summary>
-        /// <param name="relay">The relay (1-4)</param>
-        /// <param name="state">True for closed/connected, fase if open/disconnected</param>
-        protected void SetRelayState(RelayIndex relay, bool state)
-        {
-            ports[(int)relay].State = !state;
-        }
-        */
-
         /// <summary>
         /// Set all relays on
         /// </summary>
