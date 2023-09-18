@@ -37,17 +37,17 @@ namespace Relays.ElectronmagneticRelayModule_Sample
 
                 Thread.Sleep(1000);
 
-                for (int j = 0; j < 4; j++)
+                for (int j = 0; j < (int)RelayIndex.Relay4; j++)
                 {
                     Console.Write($"{(RelayIndex)j} on");
-                    module.SetRelayState((RelayIndex)j, true);
+                    module.Relays[j].IsOn = true;
                     Thread.Sleep(1000);
                 }
 
-                for (int j = 0; j < 4; j++)
+                for (int j = 0; j < (int)RelayIndex.Relay4; j++)
                 {
                     Console.Write($"{(RelayIndex)j} off");
-                    module.SetRelayState((RelayIndex)j, false);
+                    module.Relays[j].IsOn = false;
                     Thread.Sleep(1000);
                 }
             }
