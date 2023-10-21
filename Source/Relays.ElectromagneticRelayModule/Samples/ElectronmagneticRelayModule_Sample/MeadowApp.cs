@@ -8,7 +8,7 @@ using static Meadow.Foundation.Relays.ElectromagneticRelayModule;
 
 namespace Relays.ElectronmagneticRelayModule_Sample
 {
-    public class MeadowApp : App<F7CoreComputeV2>
+    public class MeadowApp : App<F7FeatherV2>
     {
         //<!=SNIP=>
 
@@ -18,7 +18,7 @@ namespace Relays.ElectronmagneticRelayModule_Sample
         {
             Console.WriteLine("Initialize...");
 
-            module = new ElectromagneticRelayModule(Device.CreateI2cBus(), 0x20);
+            module = new ElectromagneticRelayModule(Device.CreateI2cBus(), ElectromagneticRelayModule.GetAddressFromPins(false, false, false));
 
             return Task.CompletedTask;
         }
@@ -37,17 +37,17 @@ namespace Relays.ElectronmagneticRelayModule_Sample
 
                 Thread.Sleep(1000);
 
-                for(int j = 0; j < 4; j++)
+                for (int j = 0; j < (int)RelayIndex.Relay4; j++)
                 {
                     Console.Write($"{(RelayIndex)j} on");
-                    module.SetRelayState((RelayIndex)j, true);
+                    module.Relays[j].IsOn = true;
                     Thread.Sleep(1000);
                 }
 
-                for (int j = 0; j < 4; j++)
+                for (int j = 0; j < (int)RelayIndex.Relay4; j++)
                 {
                     Console.Write($"{(RelayIndex)j} off");
-                    module.SetRelayState((RelayIndex)j, false);
+                    module.Relays[j].IsOn = false;
                     Thread.Sleep(1000);
                 }
             }

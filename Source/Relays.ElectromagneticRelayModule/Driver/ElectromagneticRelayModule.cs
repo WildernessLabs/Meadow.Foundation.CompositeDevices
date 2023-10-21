@@ -1,5 +1,6 @@
 ﻿using Meadow.Foundation.ICs.IOExpanders;
 using Meadow.Hardware;
+using Meadow.Peripherals.Relays;
 using System;
 
 namespace Meadow.Foundation.Relays
@@ -11,6 +12,11 @@ namespace Meadow.Foundation.Relays
     {
         /// <inheritdoc/>
         public byte DefaultI2cAddress => 0x20;
+
+        /// <summary>
+        /// The relays
+        /// </summary>
+        public readonly Relay[] Relays = new Relay[4];
 
         /// <summary>
         /// PCF8574 object
@@ -33,35 +39,23 @@ namespace Meadow.Foundation.Relays
         {
             ioExpander = new Pcf8574(i2cBus, address);
 
-            InitializePorts();
+            //Relay logic is inverted, this sets all relays to off
+            ioExpander.AllOn();
+
+            Initialize();
         }
 
-        void InitializePorts()
+        void Initialize()
         {
-            ports[0] = ioExpander.Pins.P4.CreateDigitalOutputPort();
-            ports[1] = ioExpander.Pins.P5.CreateDigitalOutputPort();
-            ports[2] = ioExpander.Pins.P6.CreateDigitalOutputPort();
-            ports[3] = ioExpander.Pins.P7.CreateDigitalOutputPort();
-        }
+            ports[0] = ioExpander.Pins.P4.CreateDigitalOutputPort(true);
+            ports[1] = ioExpander.Pins.P5.CreateDigitalOutputPort(true);
+            ports[2] = ioExpander.Pins.P6.CreateDigitalOutputPort(true);
+            ports[3] = ioExpander.Pins.P7.CreateDigitalOutputPort(true);
 
-        /// <summary>
-        /// Get the relay state
-        /// </summary>
-        /// <param name="relay">The relay (1-4)</param>
-        /// <returns>True if closed/connected, fase if open/disconnected</returns>
-        public bool GetRelayState(RelayIndex relay)
-        {
-            return !ports[(int)relay].State;
-        }
-
-        /// <summary>
-        /// Set the relay state
-        /// </summary>
-        /// <param name="relay">The relay (1-4)</param>
-        /// <param name="state">True for closed/connected, fase if open/disconnected</param>
-        public void SetRelayState(RelayIndex relay, bool state) 
-        {
-            ports[(int)relay].State = !state;
+            Relays[0] = new Relay(ports[0], RelayType.NormallyClosed);
+            Relays[1] = new Relay(ports[1], RelayType.NormallyClosed);
+            Relays[2] = new Relay(ports[2], RelayType.NormallyClosed);
+            Relays[3] = new Relay(ports[3], RelayType.NormallyClosed);
         }
 
         /// <summary>
@@ -69,9 +63,9 @@ namespace Meadow.Foundation.Relays
         /// </summary>
         public void SetAllOn()
         {
-            foreach(var port in ports)
+            foreach (var relay in Relays)
             {
-                port.State = false;
+                relay.IsOn = true;
             }
         }
 
@@ -80,9 +74,9 @@ namespace Meadow.Foundation.Relays
         /// </summary>
         public void SetAllOff()
         {
-            foreach (var port in ports)
+            foreach (var relay in Relays)
             {
-                port.State = true;
+                relay.IsOn = false;
             }
         }
 
@@ -96,15 +90,11 @@ namespace Meadow.Foundation.Relays
             {
                 if (disposing)
                 {
-                    foreach(var port in ports)
+                    foreach (var port in ports)
                     {
-                        if(port != null)
-                        {
-                            port.Dispose();
-                        }
+                        port?.Dispose();
                     }
                 }
-
                 isDisposed = true;
             }
         }
