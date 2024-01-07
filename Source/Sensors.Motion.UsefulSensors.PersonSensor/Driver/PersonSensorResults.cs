@@ -10,12 +10,12 @@ public class PersonSensorResults
     /// <summary>
     /// Header information of the data packet.
     /// </summary>
-    public byte[] Header { get; set; }
+    public byte[] Header { get; set; } = default!;
 
     /// <summary>
     /// Number of faces detected.
     /// </summary>
-    public byte NumberOfFaces { get; set; }
+    public sbyte NumberOfFaces { get; set; }
 
     /// <summary>
     /// Information about detected faces.

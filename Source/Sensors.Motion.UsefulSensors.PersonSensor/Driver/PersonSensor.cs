@@ -22,8 +22,9 @@ public partial class PersonSensor : II2cPeripheral
     /// </summary>
     public int MAX_IDS_COUNT => 7;
 
+    private readonly int HEADER_LENGTH = 4;
     private readonly int DATA_LENGTH = 40;
-    private byte[] readBuffer = default!;
+    private readonly byte[] readBuffer;
     private readonly II2cCommunications i2cComms;
 
 
@@ -35,21 +36,75 @@ public partial class PersonSensor : II2cPeripheral
     public PersonSensor(II2cBus i2cBus, byte address = 0x62)
     {
         i2cComms = new I2cCommunications(i2cBus, address, DATA_LENGTH);
-        Initialize();
-    }
-
-    void Initialize()
-    {
         readBuffer = new byte[DATA_LENGTH];
     }
 
     /// <summary>
-    /// Reads data from the sensor
+    /// Sets the capture mode of the sensor
     /// </summary>
-    private byte[] Read()
+    /// <param name="enable">Continuous if true</param>
+    public void SetContinuousMode(bool enable)
     {
-        i2cComms.Read(readBuffer);
-        return readBuffer;
+        i2cComms.WriteRegister((byte)Commands.MODE, (byte)(enable ? 0x0 : 0x1));
+    }
+
+    /// <summary>
+    /// Sets the Person Sensor to single-shot mode for inference.
+    /// </summary>
+    public void SetSingleShotMode()
+    {
+        i2cComms.WriteRegister((byte)Commands.SINGLE_SHOT, 0x1);
+    }
+
+    /// <summary>
+    /// Sets the debug mode for the Person Sensor.
+    /// </summary>
+    /// <param name="enable">True to enable debug mode, False to disable.</param>
+    public void SetDebugMode(bool enable)
+    {
+        i2cComms.WriteRegister((byte)Commands.DEBUG_MODE, (byte)(enable ? 0x1 : 0x0));
+    }
+
+    /// <summary>
+    /// Enables or disables the ID model for the Person Sensor.
+    /// </summary>
+    /// <param name="enable">True to enable the ID model, False to disable. 
+    /// With this flag set to False, only bounding boxes are captured.</param>
+    public void SetEnableId(bool enable)
+    {
+        i2cComms.WriteRegister((byte)Commands.ENABLE_ID, (byte)(enable ? 0x1 : 0x0));
+    }
+
+    /// <summary>
+    /// Sets whether to persist recognized IDs even when unpowered for the Person Sensor.
+    /// </summary>
+    /// <param name="enable">True to store recognized IDs even when unpowered, False otherwise.</param>
+    public void SetPersistIds(bool enable)
+    {
+        i2cComms.WriteRegister((byte)Commands.PERSIST_IDS, (byte)(enable ? 0x1 : 0x0));
+    }
+
+    /// <summary>
+    /// Initiates wiping recognized IDs from storage for the Person Sensor.
+    /// </summary>
+    public void SetEraseIds()
+    {
+        i2cComms.WriteRegister((byte)Commands.ERASE_IDS, 0x1);
+    }
+
+    /// <summary>
+    /// Initiates calibration for the next identified frame as a specific person ID (0 to 7) for the Person Sensor.
+    /// </summary>
+    /// <param name="id">The person ID to calibrate.</param>
+    /// <exception cref="Exception">Thrown if the specified ID exceeds the maximum number of IDs.</exception>
+    public void SetCalibrateId(byte id)
+    {
+        if (id > MAX_IDS_COUNT)
+        {
+            throw new Exception($"ID ({id}) exceeds the maximum number of IDs ({MAX_IDS_COUNT})");
+        }
+
+        i2cComms.WriteRegister((byte)Commands.CALIBRATE_ID, id);
     }
 
     /// <summary>
@@ -58,8 +113,8 @@ public partial class PersonSensor : II2cPeripheral
     /// <returns>The structured sensor data.</returns>
     public PersonSensorResults GetSensorData()
     {
-        var data = Read();
-        return ParseSensorResults(data);
+        i2cComms.Read(readBuffer);
+        return ParseSensorResults(readBuffer);
     }
 
     /// <summary>
@@ -70,13 +125,25 @@ public partial class PersonSensor : II2cPeripheral
     public PersonSensorResults ParseSensorResults(byte[] data)
     {
         PersonSensorResults results = new();
-        results.Header = data.Take(5).ToArray();
-        results.NumberOfFaces = data[5];
+        results.Header = data.Take(HEADER_LENGTH).ToArray();
+
+        results.NumberOfFaces = (sbyte)data[HEADER_LENGTH];
+
+        if (results.NumberOfFaces < 0)
+        {
+            throw new Exception($"Number of faces detected ({results.NumberOfFaces}) is less than zero");
+        }
+
+        if (results.NumberOfFaces > MAX_FACE_COUNT)
+        {
+            throw new Exception($"Number of faces detected ({results.NumberOfFaces}) exceeds the maximum number of faces ({MAX_FACE_COUNT})");
+        }
+
         results.FaceData = new PersonFace[MAX_FACE_COUNT];
 
         for (int i = 0; i < MAX_FACE_COUNT; ++i)
         {
-            var faceStartIndex = 6 + i * 8;
+            var faceStartIndex = i * 8 + HEADER_LENGTH + 1;
             results.FaceData[i] = new PersonFace
             {
                 BoxConfidence = data[faceStartIndex],

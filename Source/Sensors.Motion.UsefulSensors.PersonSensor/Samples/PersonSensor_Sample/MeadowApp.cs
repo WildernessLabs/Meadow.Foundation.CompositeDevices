@@ -30,16 +30,19 @@ namespace Sensors.PersonSensor_Sample
                 var sensorData = personSensor.GetSensorData();
                 DisplaySensorData(sensorData);
 
-                Thread.Sleep(2000);
+                Thread.Sleep(1500);
             }
         }
 
         private void DisplaySensorData(PersonSensorResults sensorData)
         {
-            Console.WriteLine("********");
-            Console.WriteLine($"{sensorData.NumberOfFaces} faces found");
+            if (sensorData.NumberOfFaces == 0)
+            {
+                Console.WriteLine("No faces found");
+                return;
+            }
 
-            for (int i = 0; i < sensorData.NumberOfFaces && i < 4; ++i)
+            for (int i = 0; i < sensorData.NumberOfFaces; ++i)
             {
                 var face = sensorData.FaceData[i];
                 Console.Write($"Face #{i}: ");
