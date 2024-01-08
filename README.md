@@ -1,4 +1,3 @@
-[![NuGet Badge](https://buildstats.info/nuget/Meadow.Foundation.CompositeDevices)](https://www.nuget.org/packages/Meadow.Foundation.CompositeDevices)
 [![Develop Branch](https://github.com/WildernessLabs/Meadow.Foundation.compositedevices/actions/workflows/develop-ci.yml/badge.svg)](https://github.com/WildernessLabs/Meadow.Foundation.compositedevices/actions/workflows/develop-ci.yml)
 
 # Meadow.Foundation.CompositeDevices
