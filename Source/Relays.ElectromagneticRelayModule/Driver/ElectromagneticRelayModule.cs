@@ -65,7 +65,7 @@ namespace Meadow.Foundation.Relays
         {
             foreach (var relay in Relays)
             {
-                relay.IsOn = true;
+                relay.State = RelayState.Closed;
             }
         }
 
@@ -76,7 +76,7 @@ namespace Meadow.Foundation.Relays
         {
             foreach (var relay in Relays)
             {
-                relay.IsOn = false;
+                relay.State = RelayState.Open;
             }
         }
 
