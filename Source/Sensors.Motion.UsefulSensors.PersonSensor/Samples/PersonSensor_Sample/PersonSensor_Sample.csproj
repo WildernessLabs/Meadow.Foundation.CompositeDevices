@@ -7,6 +7,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Meadow.F7" Version="1.7.0" />
-	<ProjectReference Include="..\..\Driver\Relays.ElectromagneticRelayModule.csproj" />
+	<ProjectReference Include="..\..\Driver\Sensors.Motion.UsefulSensors.PersonSensor.csproj" />
   </ItemGroup>
 </Project>
