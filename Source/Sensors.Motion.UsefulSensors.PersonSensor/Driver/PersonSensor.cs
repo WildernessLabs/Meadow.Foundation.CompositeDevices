@@ -29,13 +29,12 @@ public partial class PersonSensor : II2cPeripheral
 
 
     /// <summary>
-    /// Initializes a new instance of the ElectroMagneticRelayModule device
+    /// Initializes a new instance of the Useful Sensor's Person Sensor device
     /// </summary>
     /// <param name="i2cBus">The I2C bus the peripheral is connected to</param>
-    /// <param name="address">The bus address of the peripheral</param>
-    public PersonSensor(II2cBus i2cBus, byte address = 0x62)
+    public PersonSensor(II2cBus i2cBus)
     {
-        i2cComms = new I2cCommunications(i2cBus, address, DATA_LENGTH);
+        i2cComms = new I2cCommunications(i2cBus, DefaultI2cAddress, DATA_LENGTH);
         readBuffer = new byte[DATA_LENGTH];
     }
 
