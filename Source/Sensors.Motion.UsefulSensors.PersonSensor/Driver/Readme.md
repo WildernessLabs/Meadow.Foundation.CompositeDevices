@@ -17,7 +17,7 @@ PersonSensor personSensor;
 
 public override Task Initialize()
 {
-    Console.WriteLine("Initialize...");
+    Resolver.Log.Info("Initialize...");
 
     personSensor = new PersonSensor(Device.CreateI2cBus());
 
@@ -39,18 +39,14 @@ private void DisplaySensorData(PersonSensorResults sensorData)
 {
     if (sensorData.NumberOfFaces == 0)
     {
-        Console.WriteLine("No faces found");
+        Resolver.Log.Info("No faces found");
         return;
     }
 
     for (int i = 0; i < sensorData.NumberOfFaces; ++i)
     {
         var face = sensorData.FaceData[i];
-        Console.Write($"Face #{i}: ");
-        Console.Write($"{face.BoxConfidence} confidence, ");
-        Console.Write($"({face.BoxLeft}, {face.BoxTop}), ");
-        Console.Write($"({face.BoxRight}, {face.BoxBottom}), ");
-        Console.WriteLine(face.IsFacing == 1 ? "facing" : "not facing");
+        Resolver.Log.Info($"Face #{i}: {face.BoxConfidence} confidence, ({face.BoxLeft}, {face.BoxTop}), ({face.BoxRight}, {face.BoxBottom}), facing: {face.IsFacing}");
     }
 }
 
