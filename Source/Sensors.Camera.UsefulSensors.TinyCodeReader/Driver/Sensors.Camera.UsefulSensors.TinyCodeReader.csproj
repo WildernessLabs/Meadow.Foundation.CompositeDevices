@@ -8,15 +8,15 @@
     <Authors>Wilderness Labs, Inc</Authors>
     <TargetFramework>netstandard2.1</TargetFramework>
     <OutputType>Library</OutputType>
-    <AssemblyName>UsefulSensorsPersonSensor</AssemblyName>
+    <AssemblyName>UsefulSensorsTinyCodeReader</AssemblyName>
     <Company>Wilderness Labs, Inc</Company>
     <PackageProjectUrl>http://developer.wildernesslabs.co/Meadow/Meadow.Foundation/</PackageProjectUrl>
-    <PackageId>Meadow.Foundation.Sensors.PersonSensor</PackageId>
+    <PackageId>Meadow.Foundation.Sensors.Cameras.UsefulSensors.TinyCodeReader</PackageId>
     <RepositoryUrl>https://github.com/WildernessLabs/Meadow.Foundation</RepositoryUrl>
-    <PackageTags>Meadow.Foundation,Meadow,camera,person,sensor,AI</PackageTags>
+    <PackageTags>Meadow.Foundation,Meadow,camera,tiny,code,reader,sensor,AI,QR</PackageTags>
     <Version>1.7.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>Useful Sensor's I2C optical person sensor</Description>
+    <Description>Useful Sensor's Tiny Code Reader I2C optical QR code reader</Description>
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>

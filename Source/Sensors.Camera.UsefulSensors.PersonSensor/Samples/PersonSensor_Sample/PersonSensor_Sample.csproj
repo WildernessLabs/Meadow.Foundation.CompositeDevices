@@ -7,6 +7,6 @@
   </PropertyGroup>
   <ItemGroup>
 	<ProjectReference Include="..\..\..\..\..\Meadow.Core\source\implementations\f7\Meadow.F7\Meadow.F7.csproj" />
-	<ProjectReference Include="..\..\Driver\Sensors.Motion.UsefulSensors.PersonSensor.csproj" />
+	<ProjectReference Include="..\..\Driver\Sensors.Camera.UsefulSensors.PersonSensor.csproj" />
   </ItemGroup>
 </Project>

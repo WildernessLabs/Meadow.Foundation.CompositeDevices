@@ -7,6 +7,6 @@
   </PropertyGroup>
   <ItemGroup>
 	<ProjectReference Include="..\..\..\..\..\Meadow.Core\source\implementations\f7\Meadow.F7\Meadow.F7.csproj" />
-	<ProjectReference Include="..\..\Driver\Sensors.UsefulSensors.TinyCodeReader.csproj" />
+	<ProjectReference Include="..\..\Driver\Sensors.Camera.UsefulSensors.TinyCodeReader.csproj" />
   </ItemGroup>
 </Project>

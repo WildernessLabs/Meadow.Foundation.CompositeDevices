@@ -1,6 +1,6 @@
-# Meadow.Foundation.Sensors.PersonSensor
+# Meadow.Foundation.Sensors.Camera.UsefulSensors.PersonSensor
 
-**Useful Sensor's I2C optical person sensor**
+**Useful Sensor's Person Sensor I2C optical person sensor**
 
 The **UsefulSensorsPersonSensor** library is designed for the [Wilderness Labs](www.wildernesslabs.co) Meadow .NET IoT platform and is part of [Meadow.Foundation](https://developer.wildernesslabs.co/Meadow/Meadow.Foundation/).
 
@@ -13,41 +13,41 @@ To view all Wilderness Labs open-source projects, including samples, visit [gith
 ## Usage
 
 ```csharp
-TinyCodeReader tinyCodeReader;
+PersonSensor personSensor;
 
 public override Task Initialize()
 {
     Resolver.Log.Info("Initialize...");
 
-    tinyCodeReader = new TinyCodeReader(Device.CreateI2cBus());
+    personSensor = new PersonSensor(Device.CreateI2cBus());
 
     return Task.CompletedTask;
 }
 
 public override Task Run()
 {
-    //one time read 
-    var qrCode = tinyCodeReader.ReadCode();
-
-    if (qrCode != null)
+    while (true)
     {
-        Resolver.Log.Info($"QR Code: {qrCode}");
-    }
-    else
-    {
-        Resolver.Log.Info("No QR Code Found");
-    }
+        var sensorData = personSensor.GetSensorData();
+        DisplaySensorData(sensorData);
 
-    //continuous read
-    tinyCodeReader.CodeRead += TinyCodeReader_CodeRead;
-    tinyCodeReader.StartUpdating(TimeSpan.FromSeconds(1));
-
-    return Task.CompletedTask;
+        Thread.Sleep(1500);
+    }
 }
 
-private void TinyCodeReader_CodeRead(object sender, string e)
+private void DisplaySensorData(PersonSensorResults sensorData)
 {
-    Resolver.Log.Info($"QRCode message: {e} ({DateTime.Now})");
+    if (sensorData.NumberOfFaces == 0)
+    {
+        Resolver.Log.Info("No faces found");
+        return;
+    }
+
+    for (int i = 0; i < sensorData.NumberOfFaces; ++i)
+    {
+        var face = sensorData.FaceData[i];
+        Resolver.Log.Info($"Face #{i}: {face.BoxConfidence} confidence, ({face.BoxLeft}, {face.BoxTop}), ({face.BoxRight}, {face.BoxBottom}), facing: {face.IsFacing}");
+    }
 }
 
 ```
