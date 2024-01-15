@@ -2,7 +2,7 @@
 using System;
 using System.Linq;
 
-namespace Meadow.Foundation.Sensors;
+namespace Meadow.Foundation.Sensors.Camera;
 
 /// <summary>
 /// Represents a Useful Sensor's Person Sensor
