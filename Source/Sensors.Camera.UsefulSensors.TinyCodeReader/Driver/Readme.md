@@ -1,8 +1,8 @@
-# Meadow.Foundation.Sensors.PersonSensor
+# Meadow.Foundation.Sensors.Cameras.UsefulSensors.TinyCodeReader
 
-**Useful Sensor's I2C optical person sensor**
+**Useful Sensor's Tiny Code Reader I2C optical QR code reader**
 
-The **UsefulSensorsPersonSensor** library is designed for the [Wilderness Labs](www.wildernesslabs.co) Meadow .NET IoT platform and is part of [Meadow.Foundation](https://developer.wildernesslabs.co/Meadow/Meadow.Foundation/).
+The **UsefulSensorsTinyCodeReader** library is designed for the [Wilderness Labs](www.wildernesslabs.co) Meadow .NET IoT platform and is part of [Meadow.Foundation](https://developer.wildernesslabs.co/Meadow/Meadow.Foundation/).
 
 The **Meadow.Foundation** peripherals library is an open-source repository of drivers and libraries that streamline and simplify adding hardware to your C# .NET Meadow IoT application.
 
@@ -13,45 +13,41 @@ To view all Wilderness Labs open-source projects, including samples, visit [gith
 ## Usage
 
 ```csharp
-PersonSensor personSensor;
+TinyCodeReader tinyCodeReader;
 
 public override Task Initialize()
 {
-    Console.WriteLine("Initialize...");
+    Resolver.Log.Info("Initialize...");
 
-    personSensor = new PersonSensor(Device.CreateI2cBus());
+    tinyCodeReader = new TinyCodeReader(Device.CreateI2cBus());
 
     return Task.CompletedTask;
 }
 
 public override Task Run()
 {
-    while (true)
-    {
-        var sensorData = personSensor.GetSensorData();
-        DisplaySensorData(sensorData);
+    //one time read 
+    var qrCode = tinyCodeReader.ReadCode();
 
-        Thread.Sleep(1500);
+    if (qrCode != null)
+    {
+        Resolver.Log.Info($"QR Code: {qrCode}");
     }
+    else
+    {
+        Resolver.Log.Info("No QR Code Found");
+    }
+
+    //continuous read
+    tinyCodeReader.CodeRead += TinyCodeReader_CodeRead;
+    tinyCodeReader.StartUpdating(TimeSpan.FromSeconds(1));
+
+    return Task.CompletedTask;
 }
 
-private void DisplaySensorData(PersonSensorResults sensorData)
+private void TinyCodeReader_CodeRead(object sender, string e)
 {
-    if (sensorData.NumberOfFaces == 0)
-    {
-        Console.WriteLine("No faces found");
-        return;
-    }
-
-    for (int i = 0; i < sensorData.NumberOfFaces; ++i)
-    {
-        var face = sensorData.FaceData[i];
-        Console.Write($"Face #{i}: ");
-        Console.Write($"{face.BoxConfidence} confidence, ");
-        Console.Write($"({face.BoxLeft}, {face.BoxTop}), ");
-        Console.Write($"({face.BoxRight}, {face.BoxBottom}), ");
-        Console.WriteLine(face.IsFacing == 1 ? "facing" : "not facing");
-    }
+    Resolver.Log.Info($"QRCode message: {e} ({DateTime.Now})");
 }
 
 ```
