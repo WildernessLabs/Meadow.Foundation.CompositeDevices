@@ -9,14 +9,14 @@
     <Authors>Wilderness Labs, Inc</Authors>
     <TargetFramework>netstandard2.1</TargetFramework>
     <OutputType>Library</OutputType>
-    <AssemblyName>ElectromagneticRelayModule</AssemblyName>
+    <AssemblyName>UsefulSensorsPersonSensor</AssemblyName>
     <Company>Wilderness Labs, Inc</Company>
     <PackageProjectUrl>http://developer.wildernesslabs.co/Meadow/Meadow.Foundation/</PackageProjectUrl>
-    <PackageId>Meadow.Foundation.Relays.ElectromagneticRelayModule</PackageId>
+    <PackageId>Meadow.Foundation.Sensors.Camera.UsefulSensors.PersonSensor</PackageId>
     <RepositoryUrl>https://github.com/WildernessLabs/Meadow.Foundation</RepositoryUrl>
-    <PackageTags>Meadow.Foundation,Meadow,relay,eletromagetic,module</PackageTags>
+    <PackageTags>Meadow.Foundation,Meadow,camera,person,sensor,AI,useful,motion</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>I2C 4 Channel Electromagnetic Relay Module</Description>
+    <Description>Useful Sensor's Person Sensor I2C optical person sensor</Description>
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
@@ -24,6 +24,6 @@
     <None Include="..\..\icon.png" Pack="true" PackagePath="" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Meadow.Foundation.ICs.IOExpanders.Pcx857x" Version="1.8.0" />
+    <PackageReference Include="Meadow.Foundation" Version="1.8.0" />
   </ItemGroup>
 </Project>

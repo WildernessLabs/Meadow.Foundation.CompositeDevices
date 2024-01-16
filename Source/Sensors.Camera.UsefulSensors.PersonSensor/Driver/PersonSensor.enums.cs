@@ -1,4 +1,4 @@
-﻿namespace Meadow.Foundation.Sensors
+﻿namespace Meadow.Foundation.Sensors.Camera
 {
     public partial class PersonSensor
     {

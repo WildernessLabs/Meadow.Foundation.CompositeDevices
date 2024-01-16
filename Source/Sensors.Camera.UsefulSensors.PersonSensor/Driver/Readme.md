@@ -1,8 +1,8 @@
-# Meadow.Foundation.Relays.ElectromagneticRelayModule
+# Meadow.Foundation.Sensors.Camera.UsefulSensors.PersonSensor
 
-**I2C 4 Channel Electromagnetic Relay Module**
+**Useful Sensor's Person Sensor I2C optical person sensor**
 
-The **ElectromagneticRelayModule** library is designed for the [Wilderness Labs](www.wildernesslabs.co) Meadow .NET IoT platform and is part of [Meadow.Foundation](https://developer.wildernesslabs.co/Meadow/Meadow.Foundation/).
+The **UsefulSensorsPersonSensor** library is designed for the [Wilderness Labs](www.wildernesslabs.co) Meadow .NET IoT platform and is part of [Meadow.Foundation](https://developer.wildernesslabs.co/Meadow/Meadow.Foundation/).
 
 The **Meadow.Foundation** peripherals library is an open-source repository of drivers and libraries that streamline and simplify adding hardware to your C# .NET Meadow IoT application.
 
@@ -13,47 +13,41 @@ To view all Wilderness Labs open-source projects, including samples, visit [gith
 ## Usage
 
 ```csharp
-private ElectromagneticRelayModule module;
+PersonSensor personSensor;
 
 public override Task Initialize()
 {
     Resolver.Log.Info("Initialize...");
 
-    module = new ElectromagneticRelayModule(Device.CreateI2cBus(), ElectromagneticRelayModule.GetAddressFromPins(false, false, false));
+    personSensor = new PersonSensor(Device.CreateI2cBus());
 
     return Task.CompletedTask;
 }
 
 public override Task Run()
 {
-    for (int i = 0; i < 5; i++)
+    while (true)
     {
-        Resolver.Log.Info("All on (closed)");
-        module.SetAllOn();
+        var sensorData = personSensor.GetSensorData();
+        DisplaySensorData(sensorData);
 
-        Thread.Sleep(1000);
+        Thread.Sleep(1500);
+    }
+}
 
-        Resolver.Log.Info("All off (open)");
-        module.SetAllOff();
-
-        Thread.Sleep(1000);
-
-        for (int j = 0; j < (int)RelayIndex.Relay4; j++)
-        {
-            Resolver.Log.Info($"{(RelayIndex)j} on (closed)");
-            module.Relays[j].State = RelayState.Closed;
-            Thread.Sleep(1000);
-        }
-
-        for (int j = 0; j < (int)RelayIndex.Relay4; j++)
-        {
-            Resolver.Log.Info($"{(RelayIndex)j} off (open)");
-            module.Relays[j].State = RelayState.Open;
-            Thread.Sleep(1000);
-        }
+private void DisplaySensorData(PersonSensorResults sensorData)
+{
+    if (sensorData.NumberOfFaces == 0)
+    {
+        Resolver.Log.Info("No faces found");
+        return;
     }
 
-    return Task.CompletedTask;
+    for (int i = 0; i < sensorData.NumberOfFaces; ++i)
+    {
+        var face = sensorData.FaceData[i];
+        Resolver.Log.Info($"Face #{i}: {face.BoxConfidence} confidence, ({face.BoxLeft}, {face.BoxTop}), ({face.BoxRight}, {face.BoxBottom}), facing: {face.IsFacing}");
+    }
 }
 
 ```
