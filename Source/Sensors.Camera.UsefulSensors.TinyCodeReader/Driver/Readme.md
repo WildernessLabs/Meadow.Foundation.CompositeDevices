@@ -1,8 +1,8 @@
-# Meadow.Foundation.Relays.ElectromagneticRelayModule
+# Meadow.Foundation.Sensors.Cameras.UsefulSensors.TinyCodeReader
 
-**I2C 4 Channel Electromagnetic Relay Module**
+**Useful Sensor's Tiny Code Reader I2C optical QR code reader**
 
-The **ElectromagneticRelayModule** library is designed for the [Wilderness Labs](www.wildernesslabs.co) Meadow .NET IoT platform and is part of [Meadow.Foundation](https://developer.wildernesslabs.co/Meadow/Meadow.Foundation/).
+The **UsefulSensorsTinyCodeReader** library is designed for the [Wilderness Labs](www.wildernesslabs.co) Meadow .NET IoT platform and is part of [Meadow.Foundation](https://developer.wildernesslabs.co/Meadow/Meadow.Foundation/).
 
 The **Meadow.Foundation** peripherals library is an open-source repository of drivers and libraries that streamline and simplify adding hardware to your C# .NET Meadow IoT application.
 
@@ -13,47 +13,41 @@ To view all Wilderness Labs open-source projects, including samples, visit [gith
 ## Usage
 
 ```csharp
-private ElectromagneticRelayModule module;
+TinyCodeReader tinyCodeReader;
 
 public override Task Initialize()
 {
     Resolver.Log.Info("Initialize...");
 
-    module = new ElectromagneticRelayModule(Device.CreateI2cBus(), ElectromagneticRelayModule.GetAddressFromPins(false, false, false));
+    tinyCodeReader = new TinyCodeReader(Device.CreateI2cBus());
 
     return Task.CompletedTask;
 }
 
 public override Task Run()
 {
-    for (int i = 0; i < 5; i++)
+    //one time read 
+    var qrCode = tinyCodeReader.ReadCode();
+
+    if (qrCode != null)
     {
-        Resolver.Log.Info("All on (closed)");
-        module.SetAllOn();
-
-        Thread.Sleep(1000);
-
-        Resolver.Log.Info("All off (open)");
-        module.SetAllOff();
-
-        Thread.Sleep(1000);
-
-        for (int j = 0; j < (int)RelayIndex.Relay4; j++)
-        {
-            Resolver.Log.Info($"{(RelayIndex)j} on (closed)");
-            module.Relays[j].State = RelayState.Closed;
-            Thread.Sleep(1000);
-        }
-
-        for (int j = 0; j < (int)RelayIndex.Relay4; j++)
-        {
-            Resolver.Log.Info($"{(RelayIndex)j} off (open)");
-            module.Relays[j].State = RelayState.Open;
-            Thread.Sleep(1000);
-        }
+        Resolver.Log.Info($"QR Code: {qrCode}");
+    }
+    else
+    {
+        Resolver.Log.Info("No QR Code Found");
     }
 
+    //continuous read
+    tinyCodeReader.CodeRead += TinyCodeReader_CodeRead;
+    tinyCodeReader.StartUpdating(TimeSpan.FromSeconds(1));
+
     return Task.CompletedTask;
+}
+
+private void TinyCodeReader_CodeRead(object sender, string e)
+{
+    Resolver.Log.Info($"QRCode message: {e} ({DateTime.Now})");
 }
 
 ```
