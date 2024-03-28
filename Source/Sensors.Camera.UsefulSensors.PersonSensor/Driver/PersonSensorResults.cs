@@ -1,6 +1,6 @@
-﻿using static Meadow.Foundation.Sensors.Camera.PersonSensor;
+﻿using static Meadow.Foundation.Sensors.Camera.UsefulSensors.PersonSensor;
 
-namespace Meadow.Foundation.Sensors.Camera;
+namespace Meadow.Foundation.Sensors.Camera.UsefulSensors;
 
 /// <summary>
 /// Represents the structured results returned from the person sensor.

@@ -1,6 +1,6 @@
 ﻿using Meadow;
 using Meadow.Devices;
-using Meadow.Foundation.Sensors.Camera;
+using Meadow.Foundation.Sensors.Camera.UsefulSensors;
 using System;
 using System.Threading.Tasks;
 
@@ -11,13 +11,11 @@ namespace Sensors.TinyCodeReader_Sample
         //<!=SNIP=>
         TinyCodeReader tinyCodeReader;
 
-
         public override Task Initialize()
         {
             Resolver.Log.Info("Initialize...");
 
             tinyCodeReader = new TinyCodeReader(Device.CreateI2cBus());
-
 
             return Task.CompletedTask;
         }
