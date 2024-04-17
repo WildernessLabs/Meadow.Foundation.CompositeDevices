@@ -1,6 +1,6 @@
 ﻿using Meadow;
 using Meadow.Devices;
-using Meadow.Foundation.Sensors.Camera;
+using Meadow.Foundation.Sensors.Camera.UsefulSensors;
 using System.Threading;
 using System.Threading.Tasks;
 

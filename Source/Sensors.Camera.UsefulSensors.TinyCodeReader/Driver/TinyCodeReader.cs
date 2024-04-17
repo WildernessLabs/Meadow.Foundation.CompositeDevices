@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Meadow.Foundation.Sensors.Camera;
+namespace Meadow.Foundation.Sensors.Camera.UsefulSensors;
 
 /// <summary>
 /// Represents a Useful Sensor's Tiny Code Reader
