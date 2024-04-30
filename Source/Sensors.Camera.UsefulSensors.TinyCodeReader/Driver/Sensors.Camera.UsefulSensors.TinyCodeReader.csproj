@@ -1,6 +1,6 @@
 <Project Sdk="Meadow.Sdk/1.1.0">
   <PropertyGroup>
-    <Version>1.9.0</Version>
+    <Version>1.11.0</Version>
     <PackageReadmeFile>Readme.md</PackageReadmeFile>
     <LangVersion>10.0</LangVersion>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
@@ -12,7 +12,7 @@
     <AssemblyName>UsefulSensorsTinyCodeReader</AssemblyName>
     <Company>Wilderness Labs, Inc</Company>
     <PackageProjectUrl>http://developer.wildernesslabs.co/Meadow/Meadow.Foundation/</PackageProjectUrl>
-    <PackageId>Meadow.Foundation.Sensors.Cameras.UsefulSensors.TinyCodeReader</PackageId>
+    <PackageId>Meadow.Foundation.Sensors.Camera.UsefulSensors.TinyCodeReader</PackageId>
     <RepositoryUrl>https://github.com/WildernessLabs/Meadow.Foundation</RepositoryUrl>
     <PackageTags>Meadow.Foundation,Meadow,camera,tiny,code,reader,sensor,AI,QR</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -24,6 +24,6 @@
     <None Include="..\..\icon.png" Pack="true" PackagePath="" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Meadow.Foundation" Version="1.9.0" />
+    <PackageReference Include="Meadow.Foundation" Version="1.11.0" />
   </ItemGroup>
 </Project>
