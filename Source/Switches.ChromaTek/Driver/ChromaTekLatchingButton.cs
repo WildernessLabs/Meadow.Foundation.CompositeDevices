@@ -1,53 +1,39 @@
 ﻿using Meadow.Foundation.Leds;
-using Meadow.Foundation.Sensors.Buttons;
+using Meadow.Foundation.Sensors.Switches;
 using Meadow.Hardware;
-using System;
 
 namespace Meadow.Foundation.Switches;
 
 /// <summary>
-/// Represents a momentary push button with a WS2812 color LED
+/// Represents a latching push button with a WS2812 color LED
 /// </summary>
-public class ChromaTekMomentaryButton : PushButton
+public class ChromaTekLatchingButton : SpstSwitch
 {
     private Ws2812 _leds = default!;
     private int _index;
 
     /// <summary>
-    /// Creates an instance of a ChromaTekMomentaryButton
+    /// Creates an instance of a ChromaTekLatchingButton
     /// </summary>
     /// <param name="bus">The SPI bus COPI line connected to the WS2812 data line</param>
     /// <param name="inputPort">The interrupt port connected to the switch</param>
     /// <param name="buttonIndex">The index of the button LED for daisy-chained button panels</param>
-    public ChromaTekMomentaryButton(ISpiBus bus, IDigitalInterruptPort inputPort, int buttonIndex = 0)
+    public ChromaTekLatchingButton(ISpiBus bus, IDigitalInterruptPort inputPort, int buttonIndex = 0)
         : base(inputPort)
     {
         Initialize(bus, buttonIndex);
     }
 
     /// <summary>
-    /// Creates an instance of a ChromaTekMomentaryButton
+    /// Creates an instance of a ChromaTekLatchingButton
     /// </summary>
     /// <param name="bus">The SPI bus COPI line connected to the WS2812 data line</param>
     /// <param name="pin">The IPin connected to the switch</param>
+    /// <param name="interruptMode">The interrupt mode for the switch pin</param>
     /// <param name="resistorMode">The resistor mode for the switch pin</param>
     /// <param name="buttonIndex">The index of the button LED for daisy-chained button panels</param>
-    public ChromaTekMomentaryButton(ISpiBus bus, IPin pin, ResistorMode resistorMode = ResistorMode.InternalPullUp, int buttonIndex = 0)
-        : base(pin, resistorMode)
-    {
-        Initialize(bus, buttonIndex);
-    }
-
-    /// <summary>
-    /// Creates an instance of a ChromaTekMomentaryButton
-    /// </summary>
-    /// <param name="bus">The SPI bus COPI line connected to the WS2812 data line</param>
-    /// <param name="pin">The IPin connected to the switch</param>
-    /// <param name="resistorMode">The resistor mode for the switch pin</param>
-    /// <param name="debounceDuration">Debounce duration for the interrupt pin</param>
-    /// <param name="buttonIndex">The index of the button LED for daisy-chained button panels</param>
-    public ChromaTekMomentaryButton(ISpiBus bus, IPin pin, ResistorMode resistorMode, TimeSpan debounceDuration, int buttonIndex = 0)
-        : base(pin, resistorMode, debounceDuration)
+    public ChromaTekLatchingButton(ISpiBus bus, IPin pin, InterruptMode interruptMode, ResistorMode resistorMode, int buttonIndex = 0)
+        : base(pin, interruptMode, resistorMode)
     {
         Initialize(bus, buttonIndex);
     }
