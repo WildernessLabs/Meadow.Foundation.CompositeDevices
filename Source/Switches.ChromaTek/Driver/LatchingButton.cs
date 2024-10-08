@@ -10,7 +10,8 @@ namespace Meadow.Foundation.Switches.ChromaTek;
 /// </summary>
 public class LatchingButton : SpstSwitch, IChromaTekButton
 {
-    private ISpiBus? _bus = null;
+    private ISpiBus? bus = null;
+    private Color color = Color.Black;
 
     internal Ws2812? LedController { get; set; } = default!;
     internal int ButtonIndex { get; set; } = 0;
@@ -23,7 +24,7 @@ public class LatchingButton : SpstSwitch, IChromaTekButton
     public LatchingButton(IDigitalInterruptPort inputPort, ISpiBus? bus = null)
         : base(inputPort)
     {
-        _bus = bus;
+        this.bus = bus;
     }
 
     /// <summary>
@@ -36,25 +37,22 @@ public class LatchingButton : SpstSwitch, IChromaTekButton
     public LatchingButton(IPin pin, InterruptMode interruptMode, ResistorMode resistorMode, ISpiBus? bus = null)
         : base(pin, interruptMode, resistorMode)
     {
-        _bus = bus;
+        this.bus = bus;
     }
 
     private void Initialize()
     {
         if (LedController != null) return;
 
-        if (_bus == null)
+        if (bus == null)
         {
             throw new Exception("This button must either be constructed withan ISpiBus or added to a ButtonCollection");
         }
 
-        LedController = new Ws2812(_bus, 1);
+        LedController = new Ws2812(bus, 1);
     }
 
-    /// <summary>
-    /// Sets the LED color of the button
-    /// </summary>
-    /// <param name="color">The color to set</param>
+    /// <inheritdoc/>
     public void SetColor(Color color)
     {
         if (LedController == null)
@@ -64,5 +62,9 @@ public class LatchingButton : SpstSwitch, IChromaTekButton
 
         LedController?.SetLed(ButtonIndex, color);
         LedController?.Show();
+        this.color = color;
     }
+
+    /// <inheritdoc/>
+    public Color GetColor() => color;
 }

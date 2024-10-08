@@ -13,13 +13,13 @@ BUTTON               MEADOW
            |-------- `GND`  
 [YEL] GND /
 
-[GRN] NO ----------- (not conncted)
+[GRN] NO ----------- IDigitalInterruptPort (e.g. `D04`) (pulled up)
 
-[BLU] NC ----------- IDigitalInterruptPort (e.g. `D04`) (pulled up)
+[BLU] NC ----------- (not conncted)
 
 [BLK] VDD ---------- `5V`
 
-[RED] DIN ---------- `SCK`
+[RED] DIN ---------- `COPI`
 
 [ORG] DOUT --------- (optional) Next button DIN
 ```

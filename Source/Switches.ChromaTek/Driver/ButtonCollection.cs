@@ -11,8 +11,8 @@ namespace Meadow.Foundation.Switches.ChromaTek;
 /// </summary>
 public class ButtonCollection : IEnumerable<IChromaTekButton>
 {
-    private Ws2812 _ws2812 = default!;
-    private List<IChromaTekButton> _buttons = new();
+    private Ws2812 ws2812 = default!;
+    private List<IChromaTekButton> buttons = new();
 
     /// <summary>
     /// Creates a collection of buttons
@@ -21,7 +21,7 @@ public class ButtonCollection : IEnumerable<IChromaTekButton>
     /// <param name="buttons">The list of button on the bus</param>
     public ButtonCollection(ISpiBus bus, params IChromaTekButton[] buttons)
     {
-        _ws2812 = new Ws2812(bus, buttons.Length);
+        ws2812 = new Ws2812(bus, buttons.Length);
         var index = 0;
 
         foreach (var button in buttons)
@@ -29,14 +29,14 @@ public class ButtonCollection : IEnumerable<IChromaTekButton>
             switch (button)
             {
                 case MomentaryButton mb:
-                    mb.LedController = _ws2812;
+                    mb.LedController = ws2812;
                     mb.ButtonIndex = index;
-                    _buttons.Add(mb);
+                    this.buttons.Add(mb);
                     break;
                 case LatchingButton lb:
-                    lb.LedController = _ws2812;
+                    lb.LedController = ws2812;
                     lb.ButtonIndex = index;
-                    _buttons.Add(lb);
+                    this.buttons.Add(lb);
                     break;
                 default: throw new ArgumentException("Button is not a ChromaTek button");
 
@@ -48,13 +48,13 @@ public class ButtonCollection : IEnumerable<IChromaTekButton>
     /// <inheritdoc/>
     public IChromaTekButton this[int index]
     {
-        get => _buttons[index];
+        get => buttons[index];
     }
 
     /// <inheritdoc/>
     public IEnumerator<IChromaTekButton> GetEnumerator()
     {
-        return _buttons.GetEnumerator();
+        return buttons.GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
