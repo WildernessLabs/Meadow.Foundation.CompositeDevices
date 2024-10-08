@@ -1,6 +1,6 @@
 ﻿using Meadow;
 using Meadow.Devices;
-using Meadow.Foundation.Switches;
+using Meadow.Foundation.Switches.ChromaTek;
 using Meadow.Units;
 using System;
 using System.Threading.Tasks;
@@ -11,7 +11,7 @@ namespace Switches.ChromaTek_Sample
     {
         //<!=SNIP=>
 
-        private ChromaTekMomentaryButton _button = default!;
+        private MomentaryButton _button = default!;
         private readonly Color _normalColor = Color.Green;
         private readonly Color _pressedColor = Color.Red;
 
@@ -20,7 +20,7 @@ namespace Switches.ChromaTek_Sample
             Resolver.Log.Info("Initialize...");
 
             var bus = Device.CreateSpiBus(new Frequency(2.5, Frequency.UnitType.Megahertz));
-            _button = new ChromaTekMomentaryButton(bus, Device.Pins.D04);
+            _button = new MomentaryButton(Device.Pins.D04, Meadow.Hardware.ResistorMode.InternalPullUp, bus);
             _button.SetColor(_normalColor);
             _button.Clicked += OnButtonClicked;
 

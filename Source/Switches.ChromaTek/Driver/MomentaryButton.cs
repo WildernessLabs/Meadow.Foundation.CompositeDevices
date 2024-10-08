@@ -3,26 +3,27 @@ using Meadow.Foundation.Sensors.Buttons;
 using Meadow.Hardware;
 using System;
 
-namespace Meadow.Foundation.Switches;
+namespace Meadow.Foundation.Switches.ChromaTek;
 
 /// <summary>
 /// Represents a momentary push button with a WS2812 color LED
 /// </summary>
-public class ChromaTekMomentaryButton : PushButton
+public class MomentaryButton : PushButton, IChromaTekButton
 {
-    private Ws2812 _leds = default!;
-    private int _index;
+    private ISpiBus? _bus = null;
+
+    internal Ws2812 LedController { get; set; } = default!;
+    internal int ButtonIndex { get; set; } = 0;
 
     /// <summary>
     /// Creates an instance of a ChromaTekMomentaryButton
     /// </summary>
     /// <param name="bus">The SPI bus COPI line connected to the WS2812 data line</param>
     /// <param name="inputPort">The interrupt port connected to the switch</param>
-    /// <param name="buttonIndex">The index of the button LED for daisy-chained button panels</param>
-    public ChromaTekMomentaryButton(ISpiBus bus, IDigitalInterruptPort inputPort, int buttonIndex = 0)
+    public MomentaryButton(IDigitalInterruptPort inputPort, ISpiBus? bus = null)
         : base(inputPort)
     {
-        Initialize(bus, buttonIndex);
+        _bus = bus;
     }
 
     /// <summary>
@@ -31,11 +32,10 @@ public class ChromaTekMomentaryButton : PushButton
     /// <param name="bus">The SPI bus COPI line connected to the WS2812 data line</param>
     /// <param name="pin">The IPin connected to the switch</param>
     /// <param name="resistorMode">The resistor mode for the switch pin</param>
-    /// <param name="buttonIndex">The index of the button LED for daisy-chained button panels</param>
-    public ChromaTekMomentaryButton(ISpiBus bus, IPin pin, ResistorMode resistorMode = ResistorMode.InternalPullUp, int buttonIndex = 0)
+    public MomentaryButton(IPin pin, ResistorMode resistorMode, ISpiBus? bus = null)
         : base(pin, resistorMode)
     {
-        Initialize(bus, buttonIndex);
+        _bus = bus;
     }
 
     /// <summary>
@@ -45,17 +45,22 @@ public class ChromaTekMomentaryButton : PushButton
     /// <param name="pin">The IPin connected to the switch</param>
     /// <param name="resistorMode">The resistor mode for the switch pin</param>
     /// <param name="debounceDuration">Debounce duration for the interrupt pin</param>
-    /// <param name="buttonIndex">The index of the button LED for daisy-chained button panels</param>
-    public ChromaTekMomentaryButton(ISpiBus bus, IPin pin, ResistorMode resistorMode, TimeSpan debounceDuration, int buttonIndex = 0)
+    public MomentaryButton(IPin pin, ResistorMode resistorMode, TimeSpan debounceDuration, ISpiBus? bus = null)
         : base(pin, resistorMode, debounceDuration)
     {
-        Initialize(bus, buttonIndex);
+        _bus = bus;
     }
 
-    private void Initialize(ISpiBus spiBus, int buttonIndex = 0)
+    private void Initialize()
     {
-        _leds = new Ws2812(spiBus, 20);
-        _index = buttonIndex;
+        if (LedController != null) return;
+
+        if (_bus == null)
+        {
+            throw new Exception("This button must either be constructed withan ISpiBus or added to a ButtonCollection");
+        }
+
+        LedController = new Ws2812(_bus, 1);
     }
 
     /// <summary>
@@ -64,12 +69,12 @@ public class ChromaTekMomentaryButton : PushButton
     /// <param name="color">The color to set</param>
     public void SetColor(Color color)
     {
-        // HACK: this is a hack due to SPI bus weirdness on the F7
-        for (var i = _leds.NumberOfLeds - 1; i > _index; i--)
+        if (LedController == null)
         {
-            _leds.SetLed(i, Color.Black);
+            Initialize();
         }
-        _leds.SetLed(_index, color);
-        _leds.Show();
+
+        LedController?.SetLed(ButtonIndex, color);
+        LedController?.Show();
     }
 }
