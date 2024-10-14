@@ -1,8 +1,8 @@
-# Meadow.Foundation.Sensors.Camera.UsefulSensors.TinyCodeReader
+# Meadow.Foundation.Switches.ChromaTek
 
-**Useful Sensor's Tiny Code Reader I2C optical QR code reader**
+**SPI-driven ChromaTek multi-color illuminated switches**
 
-The **UsefulSensorsTinyCodeReader** library is included in the **Meadow.Foundation.Sensors.Camera.UsefulSensors.TinyCodeReader** nuget package and is designed for the [Wilderness Labs](www.wildernesslabs.co) Meadow .NET IoT platform.
+The **Switches.ChromaTek** library is included in the **Meadow.Foundation.Switches.ChromaTek** nuget package and is designed for the [Wilderness Labs](www.wildernesslabs.co) Meadow .NET IoT platform.
 
 This driver is part of the [Meadow.Foundation](https://developer.wildernesslabs.co/Meadow/Meadow.Foundation/) peripherals library, an open-source repository of drivers and libraries that streamline and simplify adding hardware to your C# .NET Meadow IoT applications.
 
@@ -14,45 +14,35 @@ To view all Wilderness Labs open-source projects, including samples, visit [gith
 
 You can install the library from within Visual studio using the the NuGet Package Manager or from the command line using the .NET CLI:
 
-`dotnet add package Meadow.Foundation.Sensors.Camera.UsefulSensors.TinyCodeReader`
+`dotnet add package Meadow.Foundation.Switches.ChromaTek`
 ## Usage
 
 ```csharp
-TinyCodeReader tinyCodeReader;
+private MomentaryButton _button = default!;
+private readonly Color _normalColor = Color.Green;
+private readonly Color _pressedColor = Color.Red;
 
 public override Task Initialize()
 {
     Resolver.Log.Info("Initialize...");
 
-    tinyCodeReader = new TinyCodeReader(Device.CreateI2cBus());
+    var bus = Device.CreateSpiBus(new Frequency(2.5, Frequency.UnitType.Megahertz));
+    _button = new MomentaryButton(Device.Pins.D04, Meadow.Hardware.ResistorMode.InternalPullUp, bus);
+    _button.SetColor(_normalColor);
+    _button.Clicked += OnButtonClicked;
 
     return Task.CompletedTask;
 }
 
-public override Task Run()
+private void OnButtonClicked(object sender, EventArgs e)
 {
-    //one time read 
-    var qrCode = tinyCodeReader.ReadCode();
-
-    if (qrCode != null)
+    Resolver.Log.Info("Click");
+    Task.Run(async () =>
     {
-        Resolver.Log.Info($"QR Code: {qrCode}");
-    }
-    else
-    {
-        Resolver.Log.Info("No QR Code Found");
-    }
-
-    //continuous read
-    tinyCodeReader.CodeRead += TinyCodeReader_CodeRead;
-    tinyCodeReader.StartUpdating(TimeSpan.FromSeconds(1));
-
-    return Task.CompletedTask;
-}
-
-private void TinyCodeReader_CodeRead(object sender, string e)
-{
-    Resolver.Log.Info($"QRCode message: {e} ({DateTime.Now})");
+        _button.SetColor(_pressedColor);
+        await Task.Delay(3000);
+        _button.SetColor(_normalColor);
+    });
 }
 
 ```
