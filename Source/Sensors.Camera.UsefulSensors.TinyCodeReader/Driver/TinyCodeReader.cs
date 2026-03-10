@@ -12,12 +12,14 @@ public class TinyCodeReader : II2cPeripheral
     /// <summary>
     /// Event raised when a QR code is read
     /// </summary>
-    public event EventHandler<string> CodeRead = default!;
+    public event EventHandler<string>? CodeRead;
 
     /// <summary>
     /// Gets a value indicating whether the sensor is sampling/running
     /// </summary>
-    public bool IsRunning { get; private set; }
+    public bool IsRunning => _isRunning;
+
+    private volatile bool _isRunning;
 
     /// <summary>
     /// The sample period of the sensor (default 200ms)
@@ -27,9 +29,9 @@ public class TinyCodeReader : II2cPeripheral
     /// <inheritdoc/>
     public byte DefaultI2cAddress => 0x0C;
 
-    private readonly int CONTENT_BYTE_COUNT = 254;
-    private readonly int CONTENT_BYTE_LENGTH_COUNT = 2;
-    private readonly int LED_REGISTER = 0x01;
+    private const int ContentByteCount = 254;
+    private const int ContentByteLengthCount = 2;
+    private const int LedRegister = 0x01;
 
     private readonly byte[] readBuffer;
     private readonly II2cCommunications i2cComms;
@@ -40,8 +42,8 @@ public class TinyCodeReader : II2cPeripheral
     /// <param name="i2cBus">The I2C bus the peripheral is connected to</param>
     public TinyCodeReader(II2cBus i2cBus)
     {
-        i2cComms = new I2cCommunications(i2cBus, DefaultI2cAddress, CONTENT_BYTE_COUNT + CONTENT_BYTE_LENGTH_COUNT);
-        readBuffer = new byte[CONTENT_BYTE_COUNT + CONTENT_BYTE_LENGTH_COUNT];
+        i2cComms = new I2cCommunications(i2cBus, DefaultI2cAddress, ContentByteCount + ContentByteLengthCount);
+        readBuffer = new byte[ContentByteCount + ContentByteLengthCount];
     }
 
     /// <summary>
@@ -50,7 +52,7 @@ public class TinyCodeReader : II2cPeripheral
     /// <param name="enable">enable if true, disable if false</param>
     public void SetLed(bool enable)
     {
-        i2cComms.WriteRegister((byte)LED_REGISTER, (byte)(enable ? 0x01 : 0x00));
+        i2cComms.WriteRegister((byte)LedRegister, (byte)(enable ? 0x01 : 0x00));
     }
 
     /// <summary>
@@ -67,7 +69,8 @@ public class TinyCodeReader : II2cPeripheral
         }
         else
         {
-            return System.Text.Encoding.UTF8.GetString(readBuffer, 2, readBuffer[0]);
+            var length = Math.Min((int)readBuffer[0], ContentByteCount);
+            return System.Text.Encoding.UTF8.GetString(readBuffer, 2, length);
         }
     }
 
@@ -76,12 +79,12 @@ public class TinyCodeReader : II2cPeripheral
     /// </summary>
     public void StartUpdating(TimeSpan? samplePeriod = null)
     {
-        if (IsRunning)
+        if (_isRunning)
         {
             return;
         }
 
-        IsRunning = true;
+        _isRunning = true;
 
         if (samplePeriod != null)
         {
@@ -90,12 +93,19 @@ public class TinyCodeReader : II2cPeripheral
 
         Task.Run(async () =>
         {
-            while (IsRunning)
+            while (_isRunning)
             {
-                var code = ReadCode();
-                if (code != null)
+                try
                 {
-                    CodeRead?.Invoke(this, code);
+                    var code = ReadCode();
+                    if (code != null)
+                    {
+                        CodeRead?.Invoke(this, code);
+                    }
+                }
+                catch (Exception)
+                {
+                    // suppress per-sample errors to keep the loop running
                 }
 
                 await Task.Delay(SamplePeriod);
@@ -108,6 +118,6 @@ public class TinyCodeReader : II2cPeripheral
     /// </summary>
     public void StopUpdating()
     {
-        IsRunning = false;
+        _isRunning = false;
     }
 }

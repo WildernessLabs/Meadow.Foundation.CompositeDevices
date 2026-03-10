@@ -15,15 +15,15 @@ public partial class PersonSensor : II2cPeripheral
     /// <summary>
     /// The maximun number of faces the sensor can recognize
     /// </summary>
-    public int MAX_FACE_COUNT => 4;
+    public int MaxFaceCount => 4;
 
     /// <summary>
     /// The max number of specific face IDs the sensor can track
     /// </summary>
-    public int MAX_IDS_COUNT => 7;
+    public int MaxIdsCount => 7;
 
-    private readonly int HEADER_LENGTH = 4;
-    private readonly int DATA_LENGTH = 40;
+    private const int HeaderLength = 4;
+    private const int DataLength = 40;
     private readonly byte[] readBuffer;
     private readonly II2cCommunications i2cComms;
 
@@ -34,8 +34,8 @@ public partial class PersonSensor : II2cPeripheral
     /// <param name="i2cBus">The I2C bus the peripheral is connected to</param>
     public PersonSensor(II2cBus i2cBus)
     {
-        i2cComms = new I2cCommunications(i2cBus, DefaultI2cAddress, DATA_LENGTH);
-        readBuffer = new byte[DATA_LENGTH];
+        i2cComms = new I2cCommunications(i2cBus, DefaultI2cAddress, DataLength);
+        readBuffer = new byte[DataLength];
     }
 
     /// <summary>
@@ -95,12 +95,12 @@ public partial class PersonSensor : II2cPeripheral
     /// Initiates calibration for the next identified frame as a specific person ID (0 to 7) for the Person Sensor.
     /// </summary>
     /// <param name="id">The person ID to calibrate.</param>
-    /// <exception cref="Exception">Thrown if the specified ID exceeds the maximum number of IDs.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown if the specified ID exceeds the maximum number of IDs.</exception>
     public void SetCalibrateId(byte id)
     {
-        if (id > MAX_IDS_COUNT)
+        if (id > MaxIdsCount)
         {
-            throw new Exception($"ID ({id}) exceeds the maximum number of IDs ({MAX_IDS_COUNT})");
+            throw new ArgumentOutOfRangeException(nameof(id), $"ID ({id}) exceeds the maximum number of IDs ({MaxIdsCount})");
         }
 
         i2cComms.WriteRegister((byte)Commands.CALIBRATE_ID, id);
@@ -124,25 +124,25 @@ public partial class PersonSensor : II2cPeripheral
     public PersonSensorResults ParseSensorResults(byte[] data)
     {
         PersonSensorResults results = new();
-        results.Header = data.Take(HEADER_LENGTH).ToArray();
+        results.Header = data.Take(HeaderLength).ToArray();
 
-        results.NumberOfFaces = (sbyte)data[HEADER_LENGTH];
+        results.NumberOfFaces = (sbyte)data[HeaderLength];
 
         if (results.NumberOfFaces < 0)
         {
-            throw new Exception($"Number of faces detected ({results.NumberOfFaces}) is less than zero");
+            throw new InvalidOperationException($"Number of faces detected ({results.NumberOfFaces}) is less than zero");
         }
 
-        if (results.NumberOfFaces > MAX_FACE_COUNT)
+        if (results.NumberOfFaces > MaxFaceCount)
         {
-            throw new Exception($"Number of faces detected ({results.NumberOfFaces}) exceeds the maximum number of faces ({MAX_FACE_COUNT})");
+            throw new InvalidOperationException($"Number of faces detected ({results.NumberOfFaces}) exceeds the maximum number of faces ({MaxFaceCount})");
         }
 
-        results.FaceData = new PersonFace[MAX_FACE_COUNT];
+        results.FaceData = new PersonFace[MaxFaceCount];
 
-        for (int i = 0; i < MAX_FACE_COUNT; ++i)
+        for (int i = 0; i < MaxFaceCount; ++i)
         {
-            var faceStartIndex = i * 8 + HEADER_LENGTH + 1;
+            var faceStartIndex = i * 8 + HeaderLength + 1;
             results.FaceData[i] = new PersonFace
             {
                 BoxConfidence = data[faceStartIndex],

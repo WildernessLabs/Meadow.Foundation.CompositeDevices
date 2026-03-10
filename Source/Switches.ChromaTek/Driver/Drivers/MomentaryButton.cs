@@ -58,7 +58,7 @@ public class MomentaryButton : PushButton, IChromaTekButton
 
         if (bus == null)
         {
-            throw new Exception("This button must either be constructed withan ISpiBus or added to a ButtonCollection");
+            throw new Exception("This button must either be constructed with an ISpiBus or added to a ButtonCollection");
         }
 
         LedController = new Ws2812(bus, 1);

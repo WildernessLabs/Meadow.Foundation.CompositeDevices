@@ -94,6 +94,7 @@ namespace Meadow.Foundation.Relays
                     {
                         port?.Dispose();
                     }
+                    ioExpander.Dispose();
                 }
                 isDisposed = true;
             }
